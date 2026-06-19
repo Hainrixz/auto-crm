@@ -1,0 +1,53 @@
+name: Deploy to VPS
+
+# Manual-trigger deploy: pulls the chosen branch on the VPS, installs deps,
+# runs migrations, builds, and restarts the pm2 process. Triggered on demand
+# (workflow_dispatch) — never automatically — so WIP pushes never go live.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   VPS_HOST     — server hostname or IP
+#   VPS_USER     — SSH user (e.g. root or a deploy user)
+#   VPS_SSH_KEY  — private SSH key (PEM) whose public key is in the VPS authorized_keys
+# Optional:
+#   VPS_PORT     — SSH port (defaults to 22 if unset)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: claude/epic-cray-ux8a02
+
+concurrency:
+  group: vps-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          command_timeout: "20m"
+          script: |
+            set -e
+            cd /var/www/nexus
+            echo "→ Fetching ${{ github.event.inputs.branch }}"
+            git fetch origin "${{ github.event.inputs.branch }}"
+            git checkout "${{ github.event.inputs.branch }}"
+            git reset --hard "origin/${{ github.event.inputs.branch }}"
+            echo "→ Installing dependencies"
+            npm install --no-audit --no-fund
+            echo "→ Running migrations"
+            npm run migrate
+            echo "→ Building"
+            npm run build
+            echo "→ Restarting pm2 process 'nexus'"
+            pm2 restart nexus
+            echo "✓ Deploy complete"
