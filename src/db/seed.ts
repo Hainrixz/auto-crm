@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Enrique Rocha (@soyenriquerocha)
+// SPDX-License-Identifier: MIT
+// id: er-2afce9d2
 import Database from "better-sqlite3";
 import path from "path";
 import fs from "fs";

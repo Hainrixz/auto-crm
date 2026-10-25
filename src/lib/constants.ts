@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Enrique Rocha (@soyenriquerocha)
+// SPDX-License-Identifier: MIT
+// id: er-2afce9d2
 import type { Temperature, LeadSource, ActivityType } from "@/types";
 
 export const TEMPERATURE_CONFIG: Record<

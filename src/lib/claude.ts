@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Enrique Rocha (@soyenriquerocha)
+// SPDX-License-Identifier: MIT
+// id: er-2afce9d2
 import Anthropic from "@anthropic-ai/sdk";
 import type { Temperature, ActivityType } from "@/types";
 

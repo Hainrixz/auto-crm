@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Enrique Rocha (@soyenriquerocha)
+// SPDX-License-Identifier: MIT
+// id: er-2afce9d2
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 export const contacts = sqliteTable("contacts", {
