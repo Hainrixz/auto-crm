@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/hainrixz-auto-crm-badge.png)](https://mseep.ai/app/hainrixz-auto-crm)
+
 <div align="center">
 
 # Auto-CRM
