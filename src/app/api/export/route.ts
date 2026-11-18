@@ -11,7 +11,13 @@ import type { LeadSource } from "@/types";
 
 function escapeCSV(value: string | null | undefined): string {
   if (value === null || value === undefined) return "";
-  const str = String(value);
+  let str = String(value);
+  // Neutralize spreadsheet formula injection: a cell beginning with one of
+  // these characters is interpreted as a formula by Excel, Google Sheets and
+  // LibreOffice. Prefix a single quote so the value renders as literal text.
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
   if (str.includes(",") || str.includes('"') || str.includes("\n")) {
     return `"${str.replace(/"/g, '""')}"`;
   }
